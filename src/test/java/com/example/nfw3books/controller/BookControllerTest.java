@@ -49,7 +49,6 @@ class BookControllerTest {
         //When
         Book actual = testClient.post()
                 .uri("http://localhost:" + port + "/book/978-3-8362-8745-6")
-                .bodyValue(testBook)
                 .exchange()
                 .expectStatus().is2xxSuccessful()
                 .expectBody(Book.class)
