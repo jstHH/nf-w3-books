@@ -5,14 +5,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class BookService {
     private final BookRepository repository;
+    private final IsbnApiService apiService;
 
     @Autowired
-    public BookService(BookRepository repository) {
+    public BookService(BookRepository repository, IsbnApiService apiService) {
         this.repository = repository;
+        this.apiService = apiService;
     }
 
     public Map<String, Book> getBooks() {
@@ -27,8 +30,10 @@ public class BookService {
         return repository.getBookByIsbn(isbn).get();
     }
 
-    public boolean addBook(Book book) {
-        return repository.addBook(book);
+    public Optional<Book> addBook(String isbn) {
+        Book newBook = apiService.getBookbyIsbn(isbn);
+        repository.addBook(newBook);
+        return Optional.of(newBook);
     }
 
     public boolean deleteBookByIsbn(String isbn) {
@@ -37,5 +42,9 @@ public class BookService {
 
     public String changeTitel(String isbn, String titel) {
         return repository.changeTitel(isbn, titel);
+    }
+
+    public boolean deleteAllBooks() {
+        return repository.deleteAllBooks();
     }
 }

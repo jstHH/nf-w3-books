@@ -8,7 +8,9 @@ import java.util.*;
 public class BookRepository {
     Map<String, Book> books = new HashMap<>();
 
-    public BookRepository() {
+
+    public BookRepository(IsbnApiService apiService) {
+
     }
 
     public Map<String, Book> getBooks() {
@@ -27,12 +29,12 @@ public class BookRepository {
         return Optional.empty();
     }
 
-    public boolean addBook (Book newBook){
-        books.put(newBook.getIsbn(), newBook);
-        if (books.get(newBook.getIsbn()).equals(newBook)) {
-            return true;
+    public Optional<Book> addBook (Book newBook){
+        books.put(newBook.getId(), newBook);
+        if (books.get(newBook.getId()).equals(newBook)) {
+            return Optional.of(books.get(newBook.getId()));
         }
-        return false;
+        return Optional.empty();
     }
 
     public boolean deleteBookByIsbn(String isbn){
@@ -44,8 +46,16 @@ public class BookRepository {
     }
 
     public String changeTitel (String isbn, String titel) {
-        books.get(isbn).setTitel(titel);
-        return books.get(isbn).getTitel();
+        books.get(isbn).setTitle(titel);
+        return books.get(isbn).getTitle();
+    }
+
+    public boolean deleteAllBooks() {
+        books.clear();
+        if (books.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
 

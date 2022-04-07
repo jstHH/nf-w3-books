@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("book")
 public class BookController {
-    BookService bookService;
+    private final BookService bookService;
 
     @Autowired
     public BookController(BookService bookService) {
@@ -27,9 +27,9 @@ public class BookController {
         return bookService.getBookByIsbn(isbn);
     }
 
-    @PostMapping
-    public boolean addBook(@RequestBody Book book) {
-        return bookService.addBook(book);
+    @PostMapping(path = "{isbn}")
+    public Book addBook(@PathVariable String isbn) {
+        return bookService.addBook(isbn).get();
     }
 
     @DeleteMapping(path = "{isbn}")
@@ -40,6 +40,14 @@ public class BookController {
     @PutMapping
     public String changeTitel(@RequestParam String isbn, @RequestParam String titel) {
         return bookService.changeTitel(isbn, titel);
+    }
+
+    @DeleteMapping
+    public String deleteAllBook() {
+        if (bookService.deleteAllBooks()) {
+            return "Löschen erfolgreich";
+        }
+        return "Löschen nicht erfolgreich";
     }
 
 
